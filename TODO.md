@@ -5,7 +5,7 @@
 ### 🛠️ Etapa 0: Fundações e Definições (Spikes)
 
 - Spike Infraestrutura: Testar latência de Vercel Serverless Functions vs Supabase Edge Functions para evitar cold start.
-- Spike Monorepo: Configurar workspace básico (NPM/Yarn Workspaces ou Turborepo).
+  ✅ Spike Monorepo: Configurar workspace básico (NPM/Yarn Workspaces ou Turborepo) -> Workspaces -> projeto simples
 - Spike Captcha: Registrar chaves no Google reCAPTCHA (v2 ou v3) e testar integração básica.
 - Definição de Banco: Criar cluster gratuito no MongoDB Atlas ou instância no Supabase (PostgreSQL).
 
@@ -14,8 +14,8 @@
 ### 🏗️ Etapa 1: Arquitetura do Monorepo e Shared Types
 
 - Configurar pasta `packages/shared` para interfaces TypeScript (ex: `VoteDTO`, `VotaConfig`).
-- Configurar `apps/web` (React + Vite + Tailwind).
-- Configurar `apps/api` (Node.js + TypeScript).
+  ✅ Configurar `apps/web` (React + Vite + Tailwind).
+  ✅ Configurar `apps/api` (Node.js + TypeScript).
 - Validar compartilhamento de tipos entre Front e Back.
 
 ---
@@ -51,6 +51,7 @@
 - Deploy Frontend: Subir na Vercel.
 - Aviso de Dados: Implementar o banner/footer sobre registro de dados técnicos (requisito 9).
 - Teste de Stress: Simular múltiplos votos manuais para validar o Rate Limit.
+- Verificar se tem problemas de segurança
 
 ---
 

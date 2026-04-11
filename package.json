@@ -1,0 +1,23 @@
+{
+  "name": "vote-website-fe-be",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:be": "npm run dev -w apps/api",
+    "dev:fe": "npm run dev -w apps/web"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilenzolari/vote-website-fe-be.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guilenzolari/vote-website-fe-be/issues"
+  },
+  "homepage": "https://github.com/guilenzolari/vote-website-fe-be#readme"
+}
