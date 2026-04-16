@@ -13,10 +13,10 @@
 
 ### 🏗️ Etapa 1: Arquitetura do Monorepo e Shared Types
 
-- Configurar pasta `packages/shared` para interfaces TypeScript (ex: `VoteDTO`, `VotaConfig`).
+- ✅ Configurar pasta `packages/shared` para interfaces TypeScript (ex: `VoteDTO`, `VotaConfig`).
   ✅ Configurar `apps/web` (React + Vite + Tailwind).
   ✅ Configurar `apps/api` (Node.js + TypeScript).
-- Validar compartilhamento de tipos entre Front e Back.
+- ✅ Validar compartilhamento de tipos entre Front e Back.
 
 ---
 
