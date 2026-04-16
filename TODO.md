@@ -6,7 +6,7 @@
 
 - Spike Infraestrutura: Testar latência de Vercel Serverless Functions vs Supabase Edge Functions para evitar cold start.
   ✅ Spike Monorepo: Configurar workspace básico (NPM/Yarn Workspaces ou Turborepo) -> Workspaces -> projeto simples
-- Spike Captcha: Registrar chaves no Google reCAPTCHA (v2 ou v3) e testar integração básica.
+- ✅ Spike Captcha: Registrar chaves no Google reCAPTCHA (v2 ou v3) e testar integração básica -> usar reCAPTCHA v2 (caixa de seleção "Não sou um robô")
 - Definição de Banco: Criar cluster gratuito no MongoDB Atlas ou instância no Supabase (PostgreSQL).
 
 ---
