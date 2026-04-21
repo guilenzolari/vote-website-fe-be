@@ -48,7 +48,7 @@ function App() {
 
   return (
     <div id="center">
-      <Logo />
+      <Logo isPortrait={isPortrait} />
       {ButtonsList}
     </div>
   );

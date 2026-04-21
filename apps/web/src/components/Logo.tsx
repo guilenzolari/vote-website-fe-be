@@ -1,8 +1,12 @@
 import logoImage from "./../assets/the-game-logo.png";
 
-export const Logo = () => {
-  const circleSize = "13vw";
-  const logoSize = "10vw";
+interface LogoProps {
+  isPortrait: boolean;
+}
+
+export const Logo = ({ isPortrait }: LogoProps) => {
+  const circleSize = isPortrait ? "13vh" : "13vw";
+  const logoSize = isPortrait ? "10vh" : "8svw";
 
   return (
     <div
