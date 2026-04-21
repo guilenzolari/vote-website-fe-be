@@ -5,6 +5,14 @@ interface VoteButtonProps {
   width?: number;
 }
 
+const ButtonContent = ({ label }: { label: string }) => {
+  return (
+    <div>
+      <span>{label}</span>
+    </div>
+  );
+};
+
 export const VoteButton = ({ label, onVote }: VoteButtonProps) => {
   return (
     <button
@@ -18,7 +26,7 @@ export const VoteButton = ({ label, onVote }: VoteButtonProps) => {
         margin: 0,
       }}
     >
-      {label}
+      {ButtonContent({ label })}
     </button>
   );
 };
