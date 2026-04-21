@@ -2,6 +2,7 @@ import "./App.css";
 import { VoteButton } from "./components/VoteButton.tsx";
 import { useState, useEffect } from "react";
 import { Logo } from "./components/Logo.tsx";
+import { SponsorsFooter } from "./components/SponsorsFooter.tsx";
 
 const label: Array<string> = ["Pedro", "Maria", "João"];
 
@@ -49,7 +50,18 @@ function App() {
   return (
     <div id="center">
       <Logo isPortrait={isPortrait} />
-      {ButtonsList}
+      <main
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+        }}
+      >
+        {ButtonsList}
+      </main>
+      <SponsorsFooter />
     </div>
   );
 }

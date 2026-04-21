@@ -18,8 +18,7 @@ export const Logo = ({ isPortrait }: LogoProps) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: "10px",
-        marginTop: "10px",
+        marginTop: "30px",
         boxShadow: "var(--shadow)",
       }}
     >
