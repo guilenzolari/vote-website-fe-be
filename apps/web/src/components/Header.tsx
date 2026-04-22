@@ -1,8 +1,10 @@
 import logoImage from "./../assets/the-game-logo.png";
+import interfaceData from "../assets/interface.json";
 
 export const Header = () => {
   const circleSize = "5vh";
   const logoSize = "4vh";
+  const { header } = interfaceData;
 
   return (
     <header
@@ -38,7 +40,7 @@ export const Header = () => {
             fontSize: "24px",
           }}
         >
-          the game
+          {header.theGame}
         </span>
         <div
           style={{
@@ -71,7 +73,7 @@ export const Header = () => {
             color: "var(--accent)",
           }}
         >
-          Rinha de Reps
+          {header.rinhaDeReps}
         </span>
       </div>
     </header>

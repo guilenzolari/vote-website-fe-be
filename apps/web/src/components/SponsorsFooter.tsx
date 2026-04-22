@@ -1,4 +1,7 @@
+import interfaceData from "../assets/interface.json";
+
 export const SponsorsFooter = () => {
+  const { footer } = interfaceData;
   return (
     <footer
       style={{
@@ -15,7 +18,7 @@ export const SponsorsFooter = () => {
       }}
     >
       <p style={{ fontSize: "14px", fontWeight: "bold", margin: 0 }}>
-        Nossos Patrocinadores
+        {footer.sponsors}
       </p>
 
       <div style={{ display: "flex", gap: "30px", opacity: 0.7 }}>
