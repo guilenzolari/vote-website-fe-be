@@ -30,3 +30,13 @@
     gap: 18px;
   }
 }
+
+.header-text {
+  flex: 1;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  letter-spacing: -0.5px;
+  font-size: clamp(14px, 4vw, 24px); /* Desktop */
+  transition: font-size 0.2s ease;
+  white-space: nowraps;
+}

@@ -31,13 +31,9 @@ export const Header = () => {
         }}
       >
         <span
+          className="header-text"
           style={{
-            flex: 1,
             textAlign: "left",
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: "bold",
-            letterSpacing: "-0.5px",
-            fontSize: "24px",
           }}
         >
           {header.theGame}
@@ -63,13 +59,9 @@ export const Header = () => {
           </a>
         </div>
         <span
+          className="header-text"
           style={{
-            flex: 1,
             textAlign: "right",
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: "bold",
-            letterSpacing: "-0.5px",
-            fontSize: "24px",
             color: "var(--accent)",
           }}
         >
