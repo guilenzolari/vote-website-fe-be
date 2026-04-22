@@ -1,7 +1,7 @@
 import "./App.css";
 import { VoteButton } from "./components/VoteButton.tsx";
 import { useState, useEffect } from "react";
-import { Logo } from "./components/Logo.tsx";
+import { Header } from "./components/Header.tsx";
 import { SponsorsFooter } from "./components/SponsorsFooter.tsx";
 
 const label: Array<string> = ["Pedro", "Maria", "João"];
@@ -49,7 +49,7 @@ function App() {
 
   return (
     <div id="center">
-      <Logo isPortrait={isPortrait} />
+      <Header />
       <main
         style={{
           flex: 1,
