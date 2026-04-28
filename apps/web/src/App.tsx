@@ -4,8 +4,33 @@ import { useState, useEffect } from "react";
 import { Header } from "./components/Header.tsx";
 import { SponsorsFooter } from "./components/SponsorsFooter.tsx";
 import interfaceData from "./assets/interface.json";
+import BiaRosa from "./assets/photos/BiaRosa.jpeg";
+import Dinho from "./assets/photos/Dinho.jpeg";
+import Madu from "./assets/photos/Madu.jpeg";
 
-const label: Array<string> = ["Pedro", "Maria", "João"];
+type Candidate = {
+  id: string;
+  name: string;
+  image: string;
+};
+
+const candidates: Array<Candidate> = [
+  {
+    id: "bia-rosa",
+    name: "Dinho",
+    image: Dinho,
+  },
+  {
+    id: "dinho",
+    name: "Bia Rosa",
+    image: BiaRosa,
+  },
+  {
+    id: "madu",
+    name: "Madu",
+    image: Madu,
+  },
+];
 
 function App() {
   const [isPortrait, setIsPortrait] = useState(
@@ -27,17 +52,17 @@ function App() {
 
   const columns = isPortrait ? 1 : 3;
 
-  const gridWidth = isPortrait ? 50 : 70;
-  const gridHeight = isPortrait ? 40 : 25;
+  const gridWidth = 60;
+  const gridHeight = 40;
 
   const gap = 2;
 
   const buttonHeight = isPortrait
-    ? (gridHeight - gap * (label.length - 1)) / label.length
+    ? (gridHeight - gap * (candidates.length - 1)) / candidates.length
     : gridHeight;
   const buttonWidth = isPortrait
     ? gridWidth
-    : (gridWidth - gap * (label.length - 1)) / label.length;
+    : (gridWidth - gap * (candidates.length - 1)) / candidates.length;
 
   const ButtonsList = (
     <div
@@ -45,19 +70,17 @@ function App() {
         display: "grid",
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
         gap: isPortrait ? `${gap}vh` : `${gap}vw`,
-        width: `${gridWidth}vw`,
-        height: `${gridHeight}vh`,
       }}
     >
-      {label.map((candidate) => (
+      {candidates.map((candidate) => (
         <VoteButton
-          key={candidate}
-          label={candidate}
-          onVote={() => alert(`You voted for ${candidate}!`)}
+          key={candidate.id}
+          label={candidate.name}
+          onVote={() => alert(`You voted for ${candidate.name}!`)}
           isPortrait={isPortrait}
           height={buttonHeight}
           width={buttonWidth}
-          imageUrl={`https://images.unsplash.com/photo-1770010314670-464a6d221858?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+          imageUrl={candidate.image}
         />
       ))}
     </div>

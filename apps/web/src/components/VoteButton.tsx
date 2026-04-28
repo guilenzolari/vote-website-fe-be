@@ -28,7 +28,7 @@ const getImageDimensions = (
 
   return {
     width: `${width}vw`,
-    height: `${height * 0.7}vh`,
+    height: `${width}vw`,
     ...commonStyles,
   };
 };
@@ -42,8 +42,7 @@ const text = (label: string) => {
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        height: "100%",
-        width: "100%",
+        paddingTop: "10px",
       }}
     >
       <h2>{label}</h2>
@@ -66,6 +65,7 @@ export const VoteButton = ({
       style={{
         cursor: "pointer",
         margin: 0,
+        width: `${width}vw`,
       }}
     >
       <div
