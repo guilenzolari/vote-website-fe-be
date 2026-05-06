@@ -106,7 +106,6 @@ function App() {
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          gap: "40px",
           paddingBottom: "40px",
         }}
       >

@@ -36,7 +36,8 @@
 - UI Base: Layout de página única responsivo.
 - Estado da Votação:
   - Tela de "Aguardando Início" (com contagem regressiva).
-  - Tela de "Votação Ativa" (opções e botão de votar).
+  - Tela de "Votação Ativa" (opções e botão de votar). ✅
+    - Falta refinar os logos dos patrocinadores 🟡
   - Tela de "Votado com Sucesso" (feedback).
   - Tela de "Votação Encerrada" (exibição de resultados).
 - Integração reCAPTCHA: Widget visual ou execução invisível no clique do botão.
