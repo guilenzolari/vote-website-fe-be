@@ -9,6 +9,9 @@ export interface ApiError {
     | "RATE_LIMIT_EXCEEDED"
     | "INVALID_CAPTCHA"
     | "VOTING_CLOSED"
+    | "VOTING_NOT_STARTED"
+    | "INVALID_INPUT"
     | "INTERNAL_ERROR";
   message: string;
+  statusCode: number;
 }
