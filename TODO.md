@@ -17,7 +17,7 @@
 - ✅ Configurar `apps/api` (Node.js + TypeScript).
 - ✅ Validar compartilhamento de tipos entre Front e Back.
 - ✅ **Shared Constants**: Definir intervalos de tempo e Enums de estado (`BEFORE`, `DURING`, `AFTER`).
-- ⚠️ Remover node_modules do repo remoto
+- ✅ Remover node_modules do repo remoto
 - ✅ Instalar firestone pra usar o Google Cloud -> `npm install @google-cloud/firestore`
 
 ---
