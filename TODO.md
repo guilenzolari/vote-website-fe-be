@@ -1,62 +1,75 @@
-# TODO
+# TODO - Reality Show Voting App
 
 ---
 
 ### 🛠️ Etapa 0: Fundações e Definições (Spikes)
 
-- Spike Infraestrutura: Testar latência de Vercel Serverless Functions vs Supabase Edge Functions para evitar cold start.
-  ✅ Spike Monorepo: Configurar workspace básico (NPM/Yarn Workspaces ou Turborepo) -> Workspaces -> projeto simples
-- ✅ Spike Captcha: Registrar chaves no Google reCAPTCHA (v2 ou v3) e testar integração básica -> usar reCAPTCHA v2 (caixa de seleção "Não sou um robô")
-- Definição de Banco: Criar cluster gratuito no MongoDB Atlas ou instância no Supabase (PostgreSQL).
+- ✅ Spike Monorepo: Configurar workspace básico (NPM/Yarn Workspaces ou Turborepo).
+- ✅ Spike Captcha: Registrar chaves no Google reCAPTCHA v2.
+- ✅ Definição de Banco: Usar o Google Cloud
 
 ---
 
 ### 🏗️ Etapa 1: Arquitetura do Monorepo e Shared Types
 
-- ✅ Configurar pasta `packages/shared` para interfaces TypeScript (ex: `VoteDTO`, `VotaConfig`).
-  ✅ Configurar `apps/web` (React + Vite + Tailwind).
-  ✅ Configurar `apps/api` (Node.js + TypeScript).
+- ✅ Configurar `packages/shared` para interfaces (ex: `VoteDTO`, `VotaConfig`).
+- ✅ Configurar `apps/web` (React + Vite + Tailwind).
+- ✅ Configurar `apps/api` (Node.js + TypeScript).
 - ✅ Validar compartilhamento de tipos entre Front e Back.
+- ✅ **Shared Constants**: Definir intervalos de tempo e Enums de estado (`BEFORE`, `DURING`, `AFTER`).
+- ⚠️ Remover node_modules do repo remoto
+- 🟡 Instalar firestone pra usar o Google Cloud -> `npm install @google-cloud/firestore`
 
 ---
 
 ### ⚙️ Etapa 2: Backend & Regras de Negócio (API)
 
-- Modelagem: Criar Schema de Voto (opção, timestamp, hash de IP, user-agent).
-- Lógica de Período: Implementar trava de data/horário (início e fim) no servidor.
-- Segurança (Rate Limit): Configurar limite de 5 votos/min por IP.
-- Integração Captcha: Middleware para validar o token do reCAPTCHA vindo do front.
-- Endpoint de Votação: `POST /vote` com todas as validações acima.
-- Endpoint de Resultado: `GET /results` (bloqueado até o encerramento da votação).
+- **Modelagem & Segurança de Dados**:
+  - Criar Schema de Voto (opção, timestamp, hash de IP com Salt, user-agent).
+  - Implementar lógica de `hash(IP + SALT)` para conformidade com LGPD.
+- **Sincronização de Estado**:
+  - Criar endpoint `GET /config` (retorna `serverTime`, `startAt`, `endAt` e `status` calculado).
+- **Endpoint de Votação (`POST /vote`)**:
+  - 🛡️ Middleware: Validar Token reCAPTCHA.
+  - 🛡️ Middleware: Rate Limit (5 votos/min por IP Hash).
+  - 🛡️ **Validação de Janela Temporal**: Rejeitar votos com `400 Bad Request` se o servidor estiver fora do horário `startAt`/`endAt`.
+- **Endpoint de Resultado**: `GET /results` (bloqueado com 403 até o timestamp de encerramento).
 
 ---
 
 ### 🎨 Etapa 3: Interface do Usuário (Frontend)
 
-- UI Base: Layout de página única responsivo.
-- Estado da Votação:
-  - Tela de "Aguardando Início" (com contagem regressiva).
-  - Tela de "Votação Ativa" (opções e botão de votar). ✅
-    - Falta refinar os logos dos patrocinadores 🟡
-  - Tela de "Votado com Sucesso" (feedback).
-  - Tela de "Votação Encerrada" (exibição de resultados).
-- Integração reCAPTCHA: Widget visual ou execução invisível no clique do botão.
-- Tratamento de Erros: Exibir alertas para limite de IP ou votação fora do horário.
+- **Gerenciamento de Estado Temporal**:
+  - Criar Hook `useVotationStatus` para buscar `/config`.
+  - Calcular `timeOffset` (Server Time vs Local Time) para evitar burlas no relógio do PC.
+  - Implementar um `setInterval` (1s) para atualizar a UI em tempo real sem novos requests.
+- **Fluxo de Telas (Maquininha de Estados)**:
+  - 🕒 **Tela 1: Aguardando**: Contagem regressiva ativa (bloquear botão de voto).
+  - 🗳️ **Tela 2: Votação Ativa**:
+    - Renderizar opções de candidatos. ✅
+    - Refinar logos dos patrocinadores. 🟡
+    - Widget reCAPTCHA integrado ao botão de submissão.
+  - 🎉 **Tela 3: Sucesso**: Feedback visual pós-voto e botão "Votar Novamente" (respeitando rate limit).
+  - 🚫 **Tela 4: Encerrada**: Exibição dos resultados e mensagem de conclusão.
+- **Tratamento de Erros**:
+  - Toasts/Alertas para: "Votação ainda não começou", "Votação encerrada" e "Muitos pedidos (Rate Limit)".
 
 ---
 
 ### 🚀 Etapa 4: Deploy e Finalização
 
-- Configuração de Ambiente: Definir `.env` (Secrets do Banco, Captcha e Datas).
-- Deploy Backend: Subir na plataforma escolhida (Vercel/Render/Supabase).
-- Deploy Frontend: Subir na Vercel.
-- Aviso de Dados: Implementar o banner/footer sobre registro de dados técnicos (requisito 9).
-- Teste de Stress: Simular múltiplos votos manuais para validar o Rate Limit.
-- Verificar se tem problemas de segurança
+- **Configuração de Ambiente**:
+  - Definir `.env` (Secrets do Banco, Captcha, Datas e `IP_SALT`).
+- **Deploy**:
+  - Backend (Vercel/Supabase) + Frontend (Vercel).
+- **Compliance & Stress**:
+  - Implementar banner de cookies/dados técnicos (Requisito 9).
+  - **Teste de Stress**: Simular concorrência e validar se o Rate Limit bloqueia o IP corretamente.
+  - **Security Audit**: Verificar se os tempos de expiração e segredos estão protegidos.
 
 ---
 
 ### 📝 Notas de Implementação
 
-**Segurança:** O IP não deve ser salvo "puro" por questões de LGPD; ideal salvar um Hash do IP.
-**Performance:** Como o resultado só sai no final, o cálculo pode ser uma agregação simples no banco no momento do encerramento.
+- **Segurança**: Nunca confiar no `new Date()` do cliente para liberar o voto. O backend é o juiz final.
+- **UX**: Garantir que o estado "Encerrado" no Front aconteça exatamente quando o Back parar de aceitar votos.
