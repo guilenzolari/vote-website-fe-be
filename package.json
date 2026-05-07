@@ -23,5 +23,8 @@
   "workspaces": [
     "packages/*",
     "apps/*"
-  ]
+  ],
+  "dependencies": {
+    "@google-cloud/firestore": "^8.5.0"
+  }
 }
