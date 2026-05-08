@@ -11,7 +11,8 @@ export interface ApiError {
     | "VOTING_CLOSED"
     | "VOTING_NOT_STARTED"
     | "INVALID_INPUT"
-    | "INTERNAL_ERROR";
+    | "INTERNAL_ERROR"
+    | "VOTING_NOT_FINISHED";
   message: string;
   statusCode: number;
 }
