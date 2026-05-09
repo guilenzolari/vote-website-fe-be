@@ -8,7 +8,7 @@ export function validateVoteInput(
   next: NextFunction,
 ) {
   try {
-    const { optionId, captchaToken, votedAt } = req.body as VoteDTO;
+    const { optionId, captchaToken } = req.body as VoteDTO;
 
     if (!optionId || typeof optionId !== "string") {
       throw new InvalidInputError("optionId is required and must be a string");
@@ -28,16 +28,9 @@ export function validateVoteInput(
       throw new InvalidInputError("captchaToken cannot be empty");
     }
 
-    if (!votedAt || !(votedAt instanceof Date) || isNaN(votedAt.getTime())) {
-      throw new InvalidInputError(
-        "votedAt is required and must be a valid date",
-      );
-    }
-
     (req as any).validatedData = {
       optionId: optionId.trim(),
       captchaToken: captchaToken.trim(),
-      votedAt: votedAt,
     };
 
     next();
