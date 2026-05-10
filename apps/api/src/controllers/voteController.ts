@@ -6,13 +6,10 @@ import {
   getEndTime,
   getServerTime,
   getVotingOptions,
-  countVotesByIPHash,
   recordVote,
   getDBResults,
 } from "../services/voteDataService";
 import { extractClientIP, hashIP } from "../utils/ipHash";
-import { getMaxVotesPerIP } from "../utils/constants";
-import { ApiError } from "../../../../packages/shared/src/ApiResponse";
 
 // GET /config
 export const getConfig = (req: Request, res: Response, next: NextFunction) => {
@@ -49,20 +46,6 @@ export const postVote = (req: Request, res: Response, next: NextFunction) => {
     if (!ipSalt) throw new Error("IP_SALT environment variable is not defined");
     const clientIP = extractClientIP(req);
     const ipHash = hashIP(clientIP, ipSalt);
-    const maxVotesPerIP = getMaxVotesPerIP();
-
-    // Checa se o IP já atingiu o limite de votos permitido
-    const voteCount = countVotesByIPHash(ipHash);
-    if (voteCount >= maxVotesPerIP) {
-      return res.status(400).json({
-        error: {
-          code: "RATE_LIMIT_EXCEEDED",
-          message: `This IP has already voted ${voteCount} times (max: ${maxVotesPerIP} per minute)`,
-          statusCode: 400,
-        },
-        timestamp: serverTime,
-      });
-    }
 
     recordVote({
       optionId,

@@ -49,10 +49,6 @@ export const recordVote = (vote: VoteRecordDB): void => {
   });
 };
 
-export const countVotesByIPHash = (ipHash: string): number => {
-  return voteRecords.filter((v) => v.ipHash === ipHash).length;
-};
-
 //TODO: fazer consulta de verdado no banco pra pegar o resltado
 export const getDBResults = () => {
   const results: { [key: string]: number } = {};
