@@ -25,15 +25,24 @@
 ### ⚙️ Etapa 2: Backend & Regras de Negócio (API)
 
 - **Modelagem & Segurança de Dados**:
-  - Criar Schema de Voto (opção, timestamp, hash de IP com Salt, user-agent).
-  - Implementar lógica de `hash(IP + SALT)` para conformidade com LGPD.
+  - ✅ Criar Schema de Voto (opção, timestamp, hash de IP com Salt, user-agent).
+  - ✅ Implementar lógica de `hash(IP + SALT)` para conformidade com LGPD.
 - **Sincronização de Estado**:
-  - Criar endpoint `GET /config` (retorna `serverTime`, `startAt`, `endAt` e `status` calculado).
+  - ✅ Criar endpoint `GET /config` (retorna `serverTime`, `startAt`, `endAt` e `status` calculado).
 - **Endpoint de Votação (`POST /vote`)**:
-  - 🛡️ Middleware: Validar Token reCAPTCHA.
-  - 🛡️ Middleware: Rate Limit (5 votos/min por IP Hash).
-  - 🛡️ **Validação de Janela Temporal**: Rejeitar votos com `400 Bad Request` se o servidor estiver fora do horário `startAt`/`endAt`.
-- **Endpoint de Resultado**: `GET /results` (bloqueado com 403 até o timestamp de encerramento).
+  - 🟡 Middleware: Validar Token reCAPTCHA -> middleware feito e ativo, falta conecatar ao serviço do captcha de verdade
+  - ✅ Middleware: Rate Limit (5 votos/min por IP Hash).
+  - ✅ **Validação de Janela Temporal**: Rejeitar votos com `400 Bad Request` se o servidor estiver fora do horário `startAt`/`endAt`.
+- **Endpoint de Resultado**:
+  - ✅ `GET /results` (bloqueado com 403 até o timestamp de encerramento).
+- **Persistência Real (Google Cloud)**:
+  - DAL: Conectar VoteDataService ao Firestore (Substituir Mocks).
+  - Seed: Popular Firestore com candidatos e datas oficiais.
+- **Segurança de Acesso**:
+  - Admin Auth: Proteção por senha/API Key para GET /results e GET /all-votes.
+- **Monitoramento e Disponibilidade**:
+  - Implementar Sentry.io ou LogRocket: (Recomendado para erros de código).
+  - Configurar Google Cloud Monitoring (Stackdriver): Para alertas de infraestrutura (CPU alta, Banco fora do ar).
 
 ---
 
