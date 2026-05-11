@@ -6,37 +6,9 @@ import { AwaitingScreen } from "../components/AwaitingScreen.tsx";
 import { FinishedScreen } from "../components/FinishedScreen.tsx";
 import { SuccessScreen } from "../components/SuccessScreen.tsx";
 import interfaceData from "../assets/interface.json";
-import BiaRosa from "../assets/photos/BiaRosa.jpeg";
-import Dinho from "../assets/photos/Dinho.jpeg";
-import Madu from "../assets/photos/Madu.jpeg";
 import { useVotationStatus } from "../hooks/useVotationStatus";
 import { VotingStatus } from "@vote-website/shared";
 import { postVote } from "../services/api";
-
-type Candidate = {
-  id: string;
-  name: string;
-  image: string;
-};
-
-//TODO: substituir por dados do BE vindo de votationConfig
-const candidates: Array<Candidate> = [
-  {
-    id: "option1",
-    name: "Dinho",
-    image: Dinho,
-  },
-  {
-    id: "option2",
-    name: "Bia Rosa",
-    image: BiaRosa,
-  },
-  {
-    id: "option3",
-    name: "Madu",
-    image: Madu,
-  },
-];
 
 const Vote = () => {
   const { homepage } = interfaceData;
@@ -49,6 +21,7 @@ const Vote = () => {
   const [error, setError] = useState<string | null>(null);
 
   const { votationConfig, loading, refetch } = useVotationStatus();
+  const candidates = votationConfig?.options || [];
 
   const minHeight = "80vh";
 
