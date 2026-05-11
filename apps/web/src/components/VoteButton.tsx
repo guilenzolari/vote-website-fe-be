@@ -5,6 +5,7 @@ interface VoteButtonProps {
   width?: number;
   isPortrait?: boolean;
   imageUrl?: string;
+  disabled?: boolean;
 }
 
 const getImageDimensions = (
@@ -57,15 +58,18 @@ export const VoteButton = ({
   imageUrl,
   width,
   height,
+  disabled = false,
 }: VoteButtonProps) => {
   return (
     <button
       className="counter"
       onClick={onVote}
+      disabled={disabled}
       style={{
-        cursor: "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
         margin: 0,
         width: `${width}vw`,
+        opacity: disabled ? 0.5 : 1,
       }}
     >
       <div

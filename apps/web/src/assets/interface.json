@@ -9,5 +9,16 @@
   "header": {
     "theGame": "The Game",
     "rinhaDeReps": "Rinha de Reps"
+  },
+  "awaitingScreen": {
+    "title": "🕒 Votação em Breve",
+    "description": "A votação começa em:",
+    "info": "Prepare seu voto!"
+  },
+  "finishedScreen": {
+    "title": "Votação Encerrada",
+    "description": "Obrigado por participar!",
+    "info": "Os resultados serão divulgados em breve.",
+    "votationFinishedIn": "Votação encerrada em"
   }
 }
