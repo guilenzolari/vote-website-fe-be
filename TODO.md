@@ -49,19 +49,19 @@
 ### 🎨 Etapa 3: Interface do Usuário (Frontend)
 
 - **Gerenciamento de Estado Temporal**:
-  - Criar Hook `useVotationStatus` para buscar `/config`.
-  - Calcular `timeOffset` (Server Time vs Local Time) para evitar burlas no relógio do PC.
-  - Implementar um `setInterval` (1s) para atualizar a UI em tempo real sem novos requests.
+  - ✅ Criar Hook `useVotationStatus` para buscar `/config`.
+  - ✅ Calcular `timeOffset` (Server Time vs Local Time) para evitar burlas no relógio do PC.
+  - ✅ Implementar um `setInterval` (1s) para atualizar a UI em tempo real sem novos requests.
 - **Fluxo de Telas (Maquininha de Estados)**:
-  - 🕒 **Tela 1: Aguardando**: Contagem regressiva ativa (bloquear botão de voto).
-  - 🗳️ **Tela 2: Votação Ativa**:
-    - Renderizar opções de candidatos. ✅
-    - Refinar logos dos patrocinadores. 🟡
-    - Widget reCAPTCHA integrado ao botão de submissão.
-  - 🎉 **Tela 3: Sucesso**: Feedback visual pós-voto e botão "Votar Novamente" (respeitando rate limit).
-  - 🚫 **Tela 4: Encerrada**: Exibição dos resultados e mensagem de conclusão.
+  - ✅ **Tela 1: Aguardando**: Contagem regressiva ativa (bloquear botão de voto).
+  - **Tela 2: Votação Ativa**:
+    - ✅ Renderizar opções de candidatos.
+    - 🟡 Refinar logos dos patrocinadores.
+    - 🟡 Widget reCAPTCHA integrado ao botão de submissão.
+  - ✅ **Tela 3: Sucesso**: Feedback visual pós-voto e botão "Votar Novamente" (respeitando rate limit).
+  - ✅ **Tela 4: Encerrada**: Exibição dos resultados e mensagem de conclusão.
 - **Tratamento de Erros**:
-  - Toasts/Alertas para: "Votação ainda não começou", "Votação encerrada" e "Muitos pedidos (Rate Limit)".
+  - 🟡 Toasts/Alertas para os erros: "Votação ainda não começou", "Votação encerrada" e "Muitos pedidos (Rate Limit)".
 
 ---
 
