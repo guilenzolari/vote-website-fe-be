@@ -36,11 +36,11 @@ export const postVote = async (
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.error?.message ||
-        `Failed to submit vote: ${response.statusText}`,
-    );
+    const errorData = (await response.json()) as ApiResponse<null>;
+    if (errorData.error) {
+      throw errorData.error;
+    }
+    throw new Error(`Failed to submit vote: ${response.statusText}`);
   }
 
   const data: ApiResponse<{ message: string; optionId: string }> =
@@ -60,6 +60,10 @@ export const getResults = async (): Promise<{
 
   const response = await fetch(`${API_BASE_URL}/results`);
   if (!response.ok) {
+    const errorData = (await response.json()) as ApiResponse<null>;
+    if (errorData.error) {
+      throw errorData.error;
+    }
     throw new Error(`Failed to fetch results: ${response.statusText}`);
   }
 

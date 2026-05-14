@@ -61,7 +61,7 @@
   - ✅ **Tela 3: Sucesso**: Feedback visual pós-voto e botão "Votar Novamente" (respeitando rate limit).
   - ✅ **Tela 4: Encerrada**: Exibição dos resultados e mensagem de conclusão.
 - **Tratamento de Erros**:
-  - 🟡 Toasts/Alertas para os erros: "Votação ainda não começou", "Votação encerrada" e "Muitos pedidos (Rate Limit)".
+  - ✅ Toasts/Alertas para os erros: "Votação ainda não começou", "Votação encerrada" e "Muitos pedidos (Rate Limit)".
 
 ---
 

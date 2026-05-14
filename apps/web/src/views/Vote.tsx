@@ -1,14 +1,17 @@
 import { VoteButton } from "../components/VoteButton.tsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "../components/Header.tsx";
 import { SponsorsFooter } from "../components/SponsorsFooter.tsx";
 import { AwaitingScreen } from "../components/AwaitingScreen.tsx";
 import { FinishedScreen } from "../components/FinishedScreen.tsx";
 import { SuccessScreen } from "../components/SuccessScreen.tsx";
+import { Toast } from "../components/Toast";
 import interfaceData from "../assets/interface.json";
 import { useVotationStatus } from "../hooks/useVotationStatus";
+import type { ApiError } from "@vote-website/shared";
 import { VotingStatus } from "@vote-website/shared";
 import { postVote } from "../services/api";
+import { mapApiErrorMessage } from "../utils/mapApiErrorMessage.tsx";
 
 const Vote = () => {
   const { homepage } = interfaceData;
@@ -18,7 +21,11 @@ const Vote = () => {
   );
   const [votedFor, setVotedFor] = useState<string | null>(null);
   const [isVoting, setIsVoting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "error" | "success";
+  } | null>(null);
+  const toastTimeoutRef = useRef<number | null>(null);
 
   const { votationConfig, loading, refetch } = useVotationStatus();
   const candidates = votationConfig?.options || [];
@@ -36,9 +43,34 @@ const Vote = () => {
     };
   }, []);
 
+  const clearToast = () => {
+    if (toastTimeoutRef.current) {
+      window.clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = null;
+    }
+    setToast(null);
+  };
+
+  const showToast = (message: string, type: "error" | "success" = "error") => {
+    clearToast();
+    setToast({ message, type });
+    toastTimeoutRef.current = window.setTimeout(() => {
+      setToast(null);
+      toastTimeoutRef.current = null;
+    }, 5000);
+  };
+
+  const isApiError = (value: unknown): value is ApiError => {
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "code" in value &&
+      typeof (value as any).code === "string"
+    );
+  };
+
   const handleVote = async (candidateId: string, candidateName: string) => {
     setIsVoting(true);
-    setError(null);
 
     try {
       // TODO: Integrar com reCAPTCHA para obter captchaToken
@@ -51,7 +83,13 @@ const Vote = () => {
 
       setVotedFor(candidateName);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao registrar voto");
+      if (isApiError(err)) {
+        showToast(mapApiErrorMessage(err), "error");
+      } else {
+        const message =
+          err instanceof Error ? err.message : "Erro ao registrar voto";
+        showToast(mapApiErrorMessage(message), "error");
+      }
     } finally {
       setIsVoting(false);
     }
@@ -59,7 +97,7 @@ const Vote = () => {
 
   const handleVoteAgain = () => {
     setVotedFor(null);
-    setError(null);
+    clearToast();
   };
 
   if (loading) {
@@ -177,11 +215,6 @@ const Vote = () => {
             />
           ))}
         </div>
-        {error && (
-          <p style={{ color: "red", marginTop: "20px", textAlign: "center" }}>
-            {error}
-          </p>
-        )}
       </div>
     );
   }
@@ -203,6 +236,9 @@ const Vote = () => {
       >
         {screenContent}
       </main>
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={clearToast} />
+      )}
       <SponsorsFooter />
     </div>
   );

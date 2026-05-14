@@ -20,5 +20,14 @@
     "description": "Obrigado por participar!",
     "info": "Os resultados serão divulgados em breve.",
     "votationFinishedIn": "Votação encerrada em"
+  },
+  "toastMessages": {
+    "RATE_LIMIT_EXCEEDED": "Muitos votos em pouco tempo, aguarde um pouco e tente novamente",
+    "VOTING_NOT_STARTED": "Votação ainda não começou",
+    "VOTING_CLOSED": "Votação encerrada",
+    "INVALID_CAPTCHA": "Captcha inválido, tente novamente",
+    "INVALID_INPUT": "Dados inválidos, revise e tente novamente",
+    "INTERNAL_ERROR": "Erro interno, tente novamente mais tarde",
+    "VOTING_NOT_FINISHED": "Votação ainda não terminou"
   }
 }
