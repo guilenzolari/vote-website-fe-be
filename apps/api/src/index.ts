@@ -23,6 +23,7 @@ app.use(
   cors({
     origin: corsOrigins,
     credentials: true,
+    maxAge: 600, // Faz o navegador guardar a autorização do OPTIONS em cache por 10 minutos (600 segundos)
   }),
 );
 
