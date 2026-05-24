@@ -5,6 +5,7 @@ import cors from "cors";
 import voteRoutes from "./routes/voteRoutes";
 import { securityHeaders } from "./middlewares/securityHeaders";
 import { errorHandler } from "./middlewares/errorHandler";
+import { log } from "./utils/logger";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -56,9 +57,9 @@ app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Vote API running on http://localhost:${PORT}`);
+  log.debug(`🚀 Vote API running on http://localhost:${PORT}`);
   if (process.env.NODE_ENV && process.env.NODE_ENV != "production") {
-    console.log(
+    log.debug(
       `📝 Voting window: ${process.env.VOTING_START_TIME} to ${process.env.VOTING_END_TIME}`,
     );
   }

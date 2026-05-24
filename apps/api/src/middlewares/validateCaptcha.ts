@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { InvalidCaptchaError } from "../errors/VoteError";
+import { log } from "../utils/logger";
 
 export async function validateCaptcha(
   req: Request,
@@ -8,7 +9,7 @@ export async function validateCaptcha(
 ) {
   try {
     if (process.env.RECAPTCHA_ENABLED === "false") {
-      console.warn("[Debug] reCAPTCHA validation skipped (disabled in env)");
+      log.debug("reCAPTCHA validation skipped (disabled in env)");
       return next();
     }
 
@@ -24,7 +25,7 @@ export async function validateCaptcha(
       throw new InvalidCaptchaError("Invalid captcha token format");
     }
 
-    console.log("[Debug] captcha validation passed (mock)");
+    log.debug("captcha validation passed (mock)");
     next();
   } catch (error) {
     next(error);

@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Firestore } from "@google-cloud/firestore";
+import { log } from "../utils/logger";
 
 const projectId = process.env.GOOGLE_CLOUD_PROJECT || "demo-reality-show";
 const emulatorHost = process.env.FIRESTORE_EMULATOR_HOST;
@@ -22,9 +23,9 @@ export const db = new Firestore({
   }),
 });
 
-console.log(`[Firestore Setup] Conectando ao projeto: ${projectId}`);
+log.debug(`[Firestore Setup] Conectando ao projeto: ${projectId}`);
 if (emulatorHost) {
-  console.log(`[Firestore Setup] 🤖 MODO EMULADOR ATIVO: ${emulatorHost}`);
+  log.debug(`[Firestore Setup] 🤖 MODO EMULADOR ATIVO: ${emulatorHost}`);
 } else {
-  console.log(`[Firestore Setup] ☁️ MODO PRODUÇÃO ATIVO (NUVEM)`);
+  log.debug(`[Firestore Setup] ☁️ MODO PRODUÇÃO ATIVO (NUVEM)`);
 }
