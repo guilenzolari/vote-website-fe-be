@@ -37,7 +37,6 @@
   - ✅ `GET /results` (bloqueado com 403 até o timestamp de encerramento).
 - **Persistência Real (Google Cloud)**:
   - DAL: Conectar VoteDataService ao Firestore (Substituir Mocks).
-  - Seed: Popular Firestore com candidatos e datas oficiais (precisa mesmo ou posso deixar direto no BE)?
   - Criar ambiente de QA
   - Criar ambiente de PROD
 - **Segurança de Acesso**:
