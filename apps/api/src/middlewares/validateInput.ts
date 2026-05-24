@@ -3,7 +3,7 @@ import { InvalidInputError } from "../errors/VoteError";
 import { VoteDTO } from "@vote-website/shared";
 import { getVotingOptions } from "../services/voteDataService";
 
-export function validateVoteInput(
+export async function validateVoteInput(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -20,7 +20,7 @@ export function validateVoteInput(
     }
 
     // Valida se o optionId é uma opção válida
-    const validOptions = getVotingOptions();
+    const validOptions = await getVotingOptions();
     const isValidOption = validOptions.some(
       (option) => option.id === optionId.trim(),
     );

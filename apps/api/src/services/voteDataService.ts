@@ -1,9 +1,10 @@
 import { VotingStatus, VoteRecordDB } from "@vote-website/shared";
-import { getVotingWindow } from "../utils/constants";
-import { VOTING_OPTIONS } from "../utils/candidates";
-
-// TODO: dar push dos dados no banco de dados real
-let voteRecords: VoteRecordDB[] = [];
+import {
+  getVotingWindow,
+  VOTING_OPTIONS,
+  VOTES_COLLECTION,
+} from "../utils/constants";
+import { db } from "../config/firestore";
 
 export const getVotingStatus = (): VotingStatus => {
   const currentTime = Date.now();
@@ -30,28 +31,41 @@ export const getEndTime = (): number => {
   return getVotingWindow().endTime;
 };
 
-// TODO: pegar dados do firestore
 export const getVotingOptions = async () => {
   return VOTING_OPTIONS;
 };
 
-//TODO: salvar dados no firestore
-export const recordVote = (vote: VoteRecordDB): void => {
-  voteRecords.push({
+export const recordVote = async (
+  vote: Omit<VoteRecordDB, "id">,
+): Promise<string> => {
+  // Cria uma referência com ID gerado automaticamente pelo Firestore
+  const voteRef = db.collection(VOTES_COLLECTION).doc();
+
+  const newVote: VoteRecordDB = {
     ...vote,
-    id: `vote-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  });
+    id: voteRef.id, // Usa o ID gerado pelo Firestore
+    timestamp: Date.now(),
+  };
+
+  await voteRef.set(newVote); // Salva o voto com o ID e timestamp
+  return voteRef.id; // Retorna o ID do voto registrado
 };
 
-//TODO: fazer consulta de verdado no banco pra pegar o resltado
-export const getDBResults = () => {
+export const getDBResults = async (): Promise<{ [key: string]: number }> => {
+  const options = await getVotingOptions();
   const results: { [key: string]: number } = {};
 
-  VOTING_OPTIONS.forEach((option) => {
-    results[option.id] = voteRecords.filter(
-      (v) => v.optionId === option.id,
-    ).length;
-  });
+  await Promise.all(
+    options.map(async (option) => {
+      const snapshot = await db
+        .collection(VOTES_COLLECTION)
+        .where("optionId", "==", option.id)
+        .count()
+        .get();
+
+      results[option.id] = snapshot.data().count; // snapshot.size retorna o número de documentos que correspondem à consulta
+    }),
+  );
 
   return results;
 };

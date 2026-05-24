@@ -2,5 +2,5 @@ export interface VoteRecordDB {
   id?: string;
   optionId: string;
   ipHash: string;
-  createdAt: number;
+  timestamp: number;
 }

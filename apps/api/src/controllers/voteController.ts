@@ -12,13 +12,17 @@ import {
 import { extractClientIP, hashIP } from "../utils/ipHash";
 
 // GET /config
-export const getConfig = (req: Request, res: Response, next: NextFunction) => {
+export const getConfig = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const status = getVotingStatus();
     const startAt = getStartTime();
     const endAt = getEndTime();
     const serverTime = getServerTime();
-    const options = getVotingOptions();
+    const options = await getVotingOptions();
 
     const response: ApiResponse<VoteConfigResponse> = {
       data: {
@@ -38,7 +42,11 @@ export const getConfig = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // POST /vote
-export const postVote = (req: Request, res: Response, next: NextFunction) => {
+export const postVote = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const serverTime = getServerTime();
     const { optionId } = (req as any).validatedData;
@@ -47,10 +55,10 @@ export const postVote = (req: Request, res: Response, next: NextFunction) => {
     const clientIP = extractClientIP(req);
     const ipHash = hashIP(clientIP, ipSalt);
 
-    recordVote({
+    await recordVote({
       optionId,
       ipHash,
-      createdAt: serverTime,
+      timestamp: serverTime,
     });
 
     const response: ApiResponse<{ message: string; optionId: string }> = {
@@ -68,13 +76,17 @@ export const postVote = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // GET /results bloqueado até o fim da votação por middleware
-export const getResults = (req: Request, res: Response, next: NextFunction) => {
+export const getResults = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const timestamp = Date.now();
     const status = getVotingStatus();
     const endAt = getEndTime();
 
-    const results = getDBResults();
+    const results = await getDBResults();
     const response: ApiResponse<{ results: any; status: string }> = {
       data: {
         results,
