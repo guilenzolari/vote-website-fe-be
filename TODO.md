@@ -36,9 +36,7 @@
 - **Endpoint de Resultado**:
   - ✅ `GET /results` (bloqueado com 403 até o timestamp de encerramento).
 - **Persistência Real (Google Cloud)**:
-  - DAL: Conectar VoteDataService ao Firestore (Substituir Mocks).
-  - Criar ambiente de QA
-  - Criar ambiente de PROD
+  - ✅ DAL: Conectar VoteDataService ao Firestore (Substituir Mocks).
 - **Segurança de Acesso**:
   - Admin Auth: Proteção por senha/API Key para GET /results e GET /all-votes.
 - **Monitoramento e Disponibilidade**:
@@ -70,12 +68,15 @@
 
 - **Configuração de Ambiente**:
   - Definir `.env` (Secrets do Banco, Captcha, Datas e `IP_SALT`).
+  - Criar ambiente de QA
+  - Criar ambiente de PROD
 - **Deploy**:
-  - Backend (Vercel/Supabase) + Frontend (Vercel).
+  - Backend + Frontend no Google Cloud.
 - **Compliance & Stress**:
   - Implementar banner de cookies/dados técnicos (Requisito 9).
   - **Teste de Stress**: Simular concorrência e validar se o Rate Limit bloqueia o IP corretamente.
   - **Security Audit**: Verificar se os tempos de expiração e segredos estão protegidos.
+  - **Log**: Garantir que `console.log` sejam bloqueados em produção
 
 ---
 
