@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vote-website/shared": "*",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "@vote-website/shared": "*"
+    "react-turnstile": "^1.1.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
