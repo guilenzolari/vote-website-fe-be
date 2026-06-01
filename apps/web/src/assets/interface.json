@@ -29,5 +29,9 @@
     "INVALID_INPUT": "Dados inválidos, revise e tente novamente",
     "INTERNAL_ERROR": "Erro interno, tente novamente mais tarde",
     "VOTING_NOT_FINISHED": "Votação ainda não terminou"
+  },
+  "errorBoundary": {
+    "title": "Ops! Algo deu errado.",
+    "description": "Parece que houve um problema. Por favor, tente recarregar a página ou volte mais tarde."
   }
 }
