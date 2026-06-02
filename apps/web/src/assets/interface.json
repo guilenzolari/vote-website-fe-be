@@ -33,5 +33,23 @@
   "errorBoundary": {
     "title": "Ops! Algo deu errado.",
     "description": "Parece que houve um problema. Por favor, tente recarregar a página ou volte mais tarde."
+  },
+  "voteScreen": {
+    "loadingConfiguration": "Carregando configuração de votação...",
+    "loadError": "Erro ao carregar configuração de votação",
+    "securityVerificationTitle": "Verificação de segurança",
+    "securityVerificationIncomplete": "Complete a verificação para habilitar os botões de voto.",
+    "securityVerificationComplete": "Token de segurança recebido. Você pode votar agora.",
+    "missingCaptcha": "Complete a verificação de segurança antes de votar.",
+    "verificationExpired": "Sua verificação de segurança expirou. Por favor, tente votar novamente.",
+    "voteRegistrationError": "Erro ao registrar voto"
+  },
+  "turnstileWidget": {
+    "securityNotConfigured": "A verificação de segurança não está configurada corretamente.",
+    "loading": "Carregando verificação de segurança...",
+    "tokenExpired": "O token de segurança expirou. Por favor, tente novamente.",
+    "error": "Ocorreu um erro na verificação de segurança. Por favor, tente novamente.",
+    "siteKeyMissing": "A chave do Turnstile não está configurada.",
+    "siteKeyNotConfigured": "A chave do Turnstile não está configurada corretamente."
   }
 }

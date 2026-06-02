@@ -1,4 +1,5 @@
 import { VoteButton } from "../components/VoteButton.tsx";
+import TurnstileWidget from "../components/TurnstileWidget.tsx";
 import { useState, useEffect, useRef } from "react";
 import { Header } from "../components/Header.tsx";
 import { SponsorsFooter } from "../components/SponsorsFooter.tsx";
@@ -14,13 +15,15 @@ import { postVote } from "../services/api";
 import { mapApiErrorMessage } from "../utils/mapApiErrorMessage.tsx";
 
 const Vote = () => {
-  const { homepage } = interfaceData;
+  const { homepage, voteScreen } = interfaceData;
 
   const [isPortrait, setIsPortrait] = useState(
     window.innerHeight >= window.innerWidth,
   );
   const [votedFor, setVotedFor] = useState<string | null>(null);
   const [isVoting, setIsVoting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState<string | null>(null);
   const [toast, setToast] = useState<{
     message: string;
     type: "error" | "success";
@@ -69,25 +72,72 @@ const Vote = () => {
     );
   };
 
+  const isExpirationError = (error: unknown): boolean => {
+    if (error instanceof Error) {
+      return (
+        error.message.includes("InvalidCaptchaError") ||
+        error.message.includes("403") ||
+        error.message.includes("Invalid captcha")
+      );
+    }
+
+    if (typeof error === "object" && error !== null) {
+      const errObj = error as Record<string, unknown>;
+      const statusCode = errObj.statusCode as number | undefined;
+      const code = String(errObj.code || "");
+      const message = String(errObj.message || "");
+
+      return (
+        statusCode === 403 ||
+        code === "INVALID_CAPTCHA" ||
+        message.includes("InvalidCaptchaError") ||
+        message.includes("Invalid captcha")
+      );
+    }
+
+    return false;
+  };
+
+  const handleTurnstileTokenChange = (token: string | null) => {
+    setTurnstileToken(token);
+    setTurnstileError(null);
+  };
+
+  const handleTurnstileError = (error: string) => {
+    setTurnstileError(turnstileError);
+    showToast(error, "error");
+  };
+
+  const resetTurnstile = () => {
+    setTurnstileToken(null);
+    setTurnstileError(null);
+  };
+
   const handleVote = async (candidateId: string, candidateName: string) => {
+    if (!turnstileToken) {
+      showToast(voteScreen.missingCaptcha, "error");
+      return;
+    }
+
     setIsVoting(true);
 
     try {
-      // TODO: Integrar com reCAPTCHA para obter captchaToken
-      const captchaToken = "placeholder-captcha-token";
-
       await postVote({
         optionId: candidateId,
-        captchaToken,
+        captchaToken: turnstileToken,
       });
 
       setVotedFor(candidateName);
+      resetTurnstile();
     } catch (err) {
-      if (isApiError(err)) {
+      if (isExpirationError(err)) {
+        resetTurnstile();
+        showToast(voteScreen.verificationExpired, "error");
+      } else if (isApiError(err)) {
         showToast(mapApiErrorMessage(err), "error");
       } else {
         const message =
-          err instanceof Error ? err.message : "Erro ao registrar voto";
+          err instanceof Error ? err.message : voteScreen.voteRegistrationError;
         showToast(mapApiErrorMessage(message), "error");
       }
     } finally {
@@ -97,6 +147,8 @@ const Vote = () => {
 
   const handleVoteAgain = () => {
     setVotedFor(null);
+    setTurnstileToken(null);
+    setTurnstileError(null);
     clearToast();
   };
 
@@ -116,7 +168,7 @@ const Vote = () => {
             minHeight: minHeight,
           }}
         >
-          <p>Carregando configuração de votação...</p>
+          <p>{voteScreen.loadingConfiguration}</p>
         </main>
         <SponsorsFooter />
       </div>
@@ -139,7 +191,7 @@ const Vote = () => {
             minHeight: minHeight,
           }}
         >
-          <p>Erro ao carregar configuração de votação</p>
+          <p>{voteScreen.loadError}</p>
         </main>
         <SponsorsFooter />
       </div>
@@ -195,6 +247,20 @@ const Vote = () => {
           </h1>
           <h3>{homepage.description}</h3>
         </div>
+
+        <section
+          style={{
+            width: "100%",
+            maxWidth: "640px",
+            marginBottom: "24px",
+          }}
+        >
+          <TurnstileWidget
+            onTokenChange={handleTurnstileTokenChange}
+            onError={handleTurnstileError}
+          />
+        </section>
+
         <div
           style={{
             display: "grid",
@@ -211,7 +277,7 @@ const Vote = () => {
               height={buttonHeight}
               width={buttonWidth}
               imageUrl={candidate.image}
-              disabled={isVoting}
+              disabled={isVoting || !turnstileToken}
             />
           ))}
         </div>

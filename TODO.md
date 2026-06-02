@@ -30,7 +30,7 @@
 - **Sincronização de Estado**:
   - ✅ Criar endpoint `GET /config` (retorna `serverTime`, `startAt`, `endAt` e `status` calculado).
 - **Endpoint de Votação (`POST /vote`)**:
-  - 🟡 Middleware: Validar Token reCAPTCHA -> middleware feito e ativo, falta conecatar ao serviço do captcha de verdade
+  - ✅ Middleware: Validar Token reCAPTCHA -> middleware feito e ativo, falta conecatar ao serviço do captcha de verdade
   - ✅ Middleware: Rate Limit (5 votos/min por IP Hash).
   - ✅ **Validação de Janela Temporal**: Rejeitar votos com `400 Bad Request` se o servidor estiver fora do horário `startAt`/`endAt`.
 - **Endpoint de Resultado**:
@@ -56,7 +56,7 @@
   - **Tela 2: Votação Ativa**:
     - ✅ Renderizar opções de candidatos.
     - 🟡 Refinar logos dos patrocinadores.
-    - 🟡 Widget reCAPTCHA integrado ao botão de submissão.
+    - ✅ Widget reCAPTCHA integrado ao botão de submissão.
   - ✅ **Tela 3: Sucesso**: Feedback visual pós-voto e botão "Votar Novamente" (respeitando rate limit).
   - ✅ **Tela 4: Encerrada**: Exibição dos resultados e mensagem de conclusão.
 - **Tratamento de Erros**:
@@ -85,3 +85,27 @@
 
 - **Segurança**: Nunca confiar no `new Date()` do cliente para liberar o voto. O backend é o juiz final.
 - **UX**: Garantir que o estado "Encerrado" no Front aconteça exatamente quando o Back parar de aceitar votos.
+
+- **Validação com Turnstile**:
+
+  [ FRONT-END (React) ]
+  │
+  ├── 1. Usa a VITE_TURNSTILE_SITE_KEY para gerar o Token (com ou sem clique).
+  │
+  └── 2. Envia os dados do formulário + Token no payload para o seu Backend.
+  │
+  ▼
+  [ BACKEND (Next.js) ]
+  │
+  ├── 3. Pega o Token recebido e envia para a API da Cloudflare
+  │ junto com a TURNSTILE_SECRET_KEY.
+  │
+  └── 4. Cloudflare responde: "É humano" ou "É bot".
+  │
+  ├── [ Se for BOT ] ──> Rejeita e devolve erro 403 para o Front-end.
+  │
+  └── [ Se for HUMANO ]
+  │
+  ├── 5. Grava com segurança os dados no Firebase.
+  │
+  └── 6. Devolve resposta de sucesso (200 OK) para o Front-end.
