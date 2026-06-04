@@ -5,7 +5,7 @@ export interface VoteConfigResponse {
   startAt: number; // timestamp milisegundos
   endAt: number; // timestamp milisegundos
   status: VotingStatus;
-  options: CandidateVoteOption[];
+  options: CandidateVoteOption[] | undefined;
 }
 
 export interface CandidateVoteOption {

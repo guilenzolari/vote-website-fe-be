@@ -42,13 +42,6 @@ export function getVotingWindow() {
   };
 }
 
-export function getMaxVotesPerIP(): number {
-  if (!process.env.MAX_VOTES_PER_IP) {
-    throw new Error("MAX_VOTES_PER_IP must be set");
-  }
-  return parseInt(process.env.MAX_VOTES_PER_IP, 10);
-}
-
 export function getRateLimitConfig() {
   if (
     !process.env.RATE_LIMIT_WINDOW_MS ||

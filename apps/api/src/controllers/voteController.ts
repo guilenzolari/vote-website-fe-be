@@ -10,6 +10,8 @@ import {
   getDBResults,
 } from "../services/voteDataService";
 import { extractClientIP, hashIP } from "../utils/ipHash";
+import { VotingStatus } from "@vote-website/shared";
+import { CandidateVoteOption } from "@vote-website/shared";
 
 // GET /config
 export const getConfig = async (
@@ -22,7 +24,13 @@ export const getConfig = async (
     const startAt = getStartTime();
     const endAt = getEndTime();
     const serverTime = getServerTime();
-    const options = await getVotingOptions();
+    let options: CandidateVoteOption[] | undefined;
+
+    if (status === VotingStatus.ACTIVE) {
+      options = await getVotingOptions();
+    } else {
+      options = undefined;
+    }
 
     const response: ApiResponse<VoteConfigResponse> = {
       data: {
