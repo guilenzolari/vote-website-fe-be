@@ -4,6 +4,7 @@
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
+  --card-bg: #fff;
   --accent: #fa2136;
   --accent-bg: rgba(250, 33, 54, 0.1);
   --accent-border: rgba(250, 33, 54, 0.5);
@@ -37,6 +38,7 @@
     --bg: #16171d;
     --border: #2e303a;
     --code-bg: #1f2028;
+    --card-bg: #ffffff44;
     --accent: #ff4d5e; /* Um vermelho levemente mais claro para melhor contraste no preto */
     --accent-bg: rgba(250, 33, 54, 0.2);
     --accent-border: rgba(250, 33, 54, 0.6);

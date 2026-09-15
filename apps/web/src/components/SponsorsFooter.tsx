@@ -6,6 +6,7 @@ import logoLaveteria from "../assets/sponsors/logo-laveteria.png";
 import logoMercadoBob from "../assets/sponsors/logo-mercado-bob.png";
 import logoTusca from "../assets/sponsors/logo-tusca.png";
 import logoWizard from "../assets/sponsors/logo-wizard.png";
+import "./SponsorsFooter.css";
 
 const sponsorLogos = [
   logoConsultoriaDavidGomes,
@@ -21,46 +22,15 @@ export const SponsorsFooter = () => {
   const { footer } = interfaceData;
 
   return (
-    <footer
-      style={{
-        width: "100%",
-        backgroundColor: "var(--code-bg)",
-        padding: "40px 20px",
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "24px",
-      }}
-    >
-      <h4 style={{ opacity: 0.6, margin: 0 }}>{footer.sponsors}</h4>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: "16px",
-        }}
-      >
+    <footer className="sponsors-footer">
+      <h4 className="sponsors-title">{footer.sponsors}</h4>
+      <div className="sponsors-grid">
         {sponsorLogos.map((logo, index) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-
-              flex: "0 0 calc(25% - 12px)",
-              minWidth: "140px",
-            }}
-          >
+          <div key={index} className="sponsor-card">
             <img
               src={logo}
               alt={`Patrocinador ${index + 1}`}
-              style={{
-                maxHeight: "200px",
-                objectFit: "contain",
-              }}
+              className="sponsor-logo"
             />
           </div>
         ))}

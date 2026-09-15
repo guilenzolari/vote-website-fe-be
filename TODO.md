@@ -55,7 +55,7 @@
   - ✅ **Tela 1: Aguardando**: Contagem regressiva ativa (bloquear botão de voto).
   - **Tela 2: Votação Ativa**:
     - ✅ Renderizar opções de candidatos.
-    - 🟡 Refinar logos dos patrocinadores.
+    - ✅ Refinar logos dos patrocinadores.
     - ✅ Widget reCAPTCHA integrado ao botão de submissão.
   - ✅ **Tela 3: Sucesso**: Feedback visual pós-voto e botão "Votar Novamente" (respeitando rate limit).
   - ✅ **Tela 4: Encerrada**: Exibição dos resultados e mensagem de conclusão.
