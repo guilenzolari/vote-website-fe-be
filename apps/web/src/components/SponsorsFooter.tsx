@@ -1,10 +1,10 @@
 import interfaceData from "../assets/interface.json";
-import logoConsultoriaDavidGomes from "../assets/sponsors/logo-consultoria-david-gomes.jpg";
+import logoConsultoriaDavidGomes from "../assets/sponsors/logo-consultoria-david-gomes.png";
 import logoDiCapri from "../assets/sponsors/logo-di-capri.png";
 import logoGuaco from "../assets/sponsors/logo-guaco.png";
 import logoLaveteria from "../assets/sponsors/logo-laveteria.png";
 import logoMercadoBob from "../assets/sponsors/logo-mercado-bob.png";
-import logoTusca from "../assets/sponsors/logo-tusca.jpeg";
+import logoTusca from "../assets/sponsors/logo-tusca.png";
 import logoWizard from "../assets/sponsors/logo-wizard.png";
 
 const sponsorLogos = [
