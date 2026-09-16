@@ -25,15 +25,22 @@ export const SponsorsFooter = () => {
     <footer className="sponsors-footer">
       <h4 className="sponsors-title">{footer.sponsors}</h4>
       <div className="sponsors-grid">
-        {sponsorLogos.map((logo, index) => (
-          <div key={index} className="sponsor-card">
-            <img
-              src={logo}
-              alt={`Patrocinador ${index + 1}`}
-              className="sponsor-logo"
-            />
-          </div>
-        ))}
+        {sponsorLogos.map((logo, index) => {
+          const isDiCapri = index === 1;
+
+          return (
+            <div
+              key={index}
+              className={`sponsor-card${isDiCapri ? " di-capri" : ""}`}
+            >
+              <img
+                src={logo}
+                alt={`Patrocinador ${index + 1}`}
+                className="sponsor-logo"
+              />
+            </div>
+          );
+        })}
       </div>
     </footer>
   );
