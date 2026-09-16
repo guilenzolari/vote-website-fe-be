@@ -10,14 +10,12 @@ interface TurnstileWidgetProps {
 const TurnstileWidget = ({ onTokenChange, onError }: TurnstileWidgetProps) => {
   const { turnstileWidget } = interfaceData;
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
   useEffect(() => {
     if (!siteKey) {
       const errorMsg = turnstileWidget.siteKeyMissing;
-      setError(errorMsg);
       onError?.(errorMsg);
     }
   }, [siteKey, onError, turnstileWidget.siteKeyMissing]);
@@ -26,20 +24,17 @@ const TurnstileWidget = ({ onTokenChange, onError }: TurnstileWidgetProps) => {
     setIsLoading(false);
   };
   const handleOnVerify = (token: string) => {
-    setError(null);
     onTokenChange(token);
   };
 
   const handleOnExpire = () => {
     onTokenChange(null);
     const errorMsg = turnstileWidget.tokenExpired;
-    setError(errorMsg);
     onError?.(errorMsg);
   };
 
   const handleOnError = () => {
     const errorMsg = turnstileWidget.error;
-    setError(errorMsg);
     onError?.(errorMsg);
   };
 
