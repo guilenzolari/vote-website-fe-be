@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "vote-web-app-the-game-reps"
-  }
+  },
+  "targets": {
+    "vote-web-app-the-game-reps": {
+      "hosting": {
+        "rinhadereps": [
+          "rinhadereps"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
