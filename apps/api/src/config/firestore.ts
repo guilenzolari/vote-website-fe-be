@@ -1,10 +1,11 @@
 import "dotenv/config";
+import fs from "fs"; // Certifique-se de importar o fs
 import { Firestore } from "@google-cloud/firestore";
 import { log } from "../utils/logger";
 
 const projectId = process.env.GOOGLE_CLOUD_PROJECT;
 const emulatorHost = process.env.FIRESTORE_EMULATOR_HOST;
-const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON; // Nova variável opcional
+const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
 
 if (!projectId) {
   throw new Error("GOOGLE_CLOUD_PROJECT is not defined");
@@ -27,10 +28,18 @@ if (emulatorHost) {
     },
   };
 } else if (serviceAccountJson) {
-  // Se estiver em produção e passamos o JSON via variável de ambiente
+  // Se for um caminho de arquivo (Secret File do Render), lê o conteúdo. Senão, usa direto.
+  let credentialsObj;
+  if (serviceAccountJson.startsWith("/")) {
+    const fileContent = fs.readFileSync(serviceAccountJson, "utf8");
+    credentialsObj = JSON.parse(fileContent);
+  } else {
+    credentialsObj = JSON.parse(serviceAccountJson);
+  }
+
   dbConfig = {
     projectId,
-    credentials: JSON.parse(serviceAccountJson),
+    credentials: credentialsObj,
   };
 }
 
