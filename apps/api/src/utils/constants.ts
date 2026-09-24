@@ -12,8 +12,8 @@ export const VOTING_OPTIONS = [
       "https://img.freepik.com/free-photo/lavender-field-sunset-near-valensole_268835-3910.jpg?semt=ais_hybrid&w=740&q=80",
   },
   {
-    id: "orangutango",
-    name: "orangutango",
+    id: "orangotango",
+    name: "orangotango",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS92eisuWOx3tEjeW14mT9ACVgXDwIRBGtnww&s",
   },
