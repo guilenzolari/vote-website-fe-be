@@ -1,24 +1,24 @@
 # Vote API - Reality Show Voting System
 
-API backend para sistema de votação de Reality Show com segurança e validação de janela temporal.
+Backend API for a reality show voting system, with security controls and voting window validation.
 
 ## 🚀 Quick Start
 
-### Instalação
+### Installation
 
 ```bash
 npm install
 ```
 
-### Variáveis de Ambiente
+### Environment variables
 
-Copiar `.env.example` para `.env` e preencher os valores:
+Copy `.env.example` to `.env` and fill in the values:
 
 ```bash
 cp .env.example .env
 ```
 
-### Desenvolvimento
+### Development
 
 ```bash
 npm run dev
@@ -30,7 +30,7 @@ npm run dev
 npm run build
 ```
 
-### Produção
+### Production
 
 ```bash
 npm start
@@ -40,7 +40,7 @@ npm start
 
 ### 1. GET `/api/vote/config`
 
-Retorna configuração de votação e status atual.
+Returns the voting configuration and current status.
 
 **Response:**
 
@@ -51,10 +51,10 @@ Retorna configuração de votação e status atual.
     "startAt": 1715103600000,
     "endAt": 1715110800000,
     "status": "ACTIVE",
-    "title": "Votação Reality Show 2026",
+    "title": "Reality Show Voting 2026",
     "options": [
-      { "id": "option1", "name": "Candidato A" },
-      { "id": "option2", "name": "Candidato B" }
+      { "id": "option1", "name": "Candidate A" },
+      { "id": "option2", "name": "Candidate B" }
     ]
   },
   "timestamp": 1715103600000
@@ -63,7 +63,7 @@ Retorna configuração de votação e status atual.
 
 ### 2. POST `/api/vote/vote`
 
-Registra um voto para uma opção.
+Records a vote for an option.
 
 **Request:**
 
@@ -86,18 +86,18 @@ Registra um voto para uma opção.
 }
 ```
 
-**Erros Possíveis:**
+**Possible errors:**
 
-- `400 Bad Request` - Input inválido ou votação não começou
-- `403 Forbidden` - Votação encerrada
-- `429 Too Many Requests` - Rate limit excedido
-- `500 Internal Server Error` - Erro no servidor
+- `400 Bad Request` - Invalid input or voting has not started
+- `403 Forbidden` - Voting has ended
+- `429 Too Many Requests` - Rate limit exceeded
+- `500 Internal Server Error` - Server error
 
 ### 3. GET `/api/vote/results`
 
-Retorna resultados da votação (bloqueado até encerramento).
+Returns the voting results (unavailable until voting ends).
 
-**Response (após votação encerrar):**
+**Response (after voting ends):**
 
 ```json
 {
@@ -113,61 +113,61 @@ Retorna resultados da votação (bloqueado até encerramento).
 }
 ```
 
-## 🔒 Segurança
+## 🔒 Security
 
-### 1. **Validação de Janela Temporal**
+### 1. **Voting window validation**
 
-- Endpoint POST `/vote` valida se a votação está no intervalo configurado
-- Cliente e servidor precisam estar sincronizados
-- `serverTime` é utilizado para evitar burlas de relógio do cliente
+- `POST /vote` validates whether voting is within the configured time window.
+- The client and server clocks need to be synchronized.
+- `serverTime` is used to prevent client clock manipulation.
 
-### 2. **Rate Limiting**
+### 2. **Rate limiting**
 
-- 5 requisições por IP a cada 60 segundos (configurável via `.env`)
-- IP é hasheado com salt para LGPD compliance
-- Headers informativos: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- 5 requests per IP every 60 seconds (configurable through `.env`).
+- IP addresses are hashed with a salt for LGPD compliance.
+- Informational headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
 
-### 3. **IP Hash com Salt**
+### 3. **IP hashing with salt**
 
 ```typescript
 hash(IP + SALT); // SHA-256
 ```
 
-- Nunca armazenamos IPs em texto plano
-- Salt deve ser alterado regularmente em produção
-- Impede rastreamento de IPs individuais
+- IP addresses are never stored in plain text.
+- The salt should be changed regularly in production.
+- Prevents tracking individual IP addresses.
 
-### 4. **Headers de Segurança**
+### 4. **Security headers**
 
 - `X-Content-Type-Options: nosniff`
 - `X-XSS-Protection: 1; mode=block`
 - `X-Frame-Options: DENY`
-- `Content-Security-Policy` para reCAPTCHA
+- `Content-Security-Policy` for reCAPTCHA
 - `Referrer-Policy: strict-origin-when-cross-origin`
 
-### 5. **Validação de Entrada**
+### 5. **Input validation**
 
-- Todos os inputs são validados antes do processamento
-- Mensagens de erro genéricas em produção
+- All inputs are validated before processing.
+- Generic error messages are returned in production.
 
 ### 6. **CORS**
 
-- Configurável via `CORS_ORIGIN` (múltiplas origens suportadas)
-- Credentials habilitadas para requests de origem autorizada
+- Configurable through `CORS_ORIGIN` (supports multiple origins).
+- Credentials are enabled for requests from allowed origins.
 
-## 🛡️ Extras de Segurança (Roadmap)
+## 🛡️ Additional security measures (roadmap)
 
-### Implementação Futura - Prioridade Alta
+### Future implementation - High priority
 
-1. **reCAPTCHA v2 Integration**
-   - Validar token contra Google API
-   - Implementar fallback em caso de falha
-   - Threshold de score configurável
+1. **reCAPTCHA v2 integration**
+   - Validate the token against the Google API.
+   - Implement a fallback in case of failure.
+   - Make the score threshold configurable.
 
-2. **Database Integration (Firebase/Firestore)**
+2. **Database integration (Firebase/Firestore)**
 
    ```typescript
-   // Estrutura esperada
+   // Expected structure
    votes/{docId}
      - optionId: string
      - ipHash: string
@@ -175,57 +175,57 @@ hash(IP + SALT); // SHA-256
      - timestamp: number
    ```
 
-3. **Geolocation Blocking**
-   - Bloquear votações de regiões específicas
-   - Rejeitar VPNs/Proxies conhecidos
+3. **Geolocation blocking**
+   - Block votes from specific regions.
+   - Reject known VPNs/proxies.
 
-4. **User-Agent Analysis**
-   - Detectar bots simulados
-   - Alertas para padrões suspeitos
+4. **User-agent analysis**
+   - Detect simulated bots.
+   - Alert on suspicious patterns.
 
-### Implementação Futura - Prioridade Média
+### Future implementation - Medium priority
 
-5. **Logging & Monitoring**
-   - Logs estruturados (JSON)
-   - Alertas para anomalias
-   - Dashboard de estatísticas em tempo real
+5. **Logging and monitoring**
+   - Structured logs (JSON).
+   - Alerts for anomalies.
+   - Real-time statistics dashboard.
 
-6. **Database Redundancy**
-   - Replicação automática
-   - Backup periódico
-   - Point-in-time recovery
+6. **Database redundancy**
+   - Automatic replication.
+   - Periodic backups.
+   - Point-in-time recovery.
 
-7. **API Authentication**
-   - JWT para operações administrativas
-   - Rate limiting separado por tier
+7. **API authentication**
+   - JWT for administrative operations.
+   - Separate rate limits by tier.
 
-### Implementação Futura - Prioridade Baixa
+### Future implementation - Low priority
 
-8. **Blockchain Verification** (opcional)
-   - Registrar hash de resultados no blockchain
-   - Prova de integridade dos dados
+8. **Blockchain verification** (optional)
+   - Record a results hash on the blockchain.
+   - Provide proof of data integrity.
 
-9. **Multi-language Support**
-   - Mensagens de erro em múltiplos idiomas
+9. **Multi-language support**
+   - Error messages in multiple languages.
 
-## 📊 Monitoramento
+## 📊 Monitoring
 
-### Health Check
+### Health check
 
 ```bash
 curl http://localhost:3001/health
 ```
 
-### Métricas com Logs
+### Log metrics
 
-Os logs incluem:
+The logs include:
 
-- Requisições com timestamp
-- Erros com stack trace
-- Rate limit triggers
-- Validação de votação
+- Requests with timestamps.
+- Errors with stack traces.
+- Rate limit triggers.
+- Voting validation.
 
-### Exemplo de Log de Voto
+### Vote log example
 
 ```
 [2026-05-07T18:00:00Z] POST /api/vote/vote
@@ -235,20 +235,20 @@ Os logs incluem:
   Rate Limit: 2/5
 ```
 
-## ⚙️ Configuração
+## ⚙️ Configuration
 
-### Variáveis Críticas
+### Critical variables
 
-- `VOTING_START_TIME` e `VOTING_END_TIME` - DEVE estar em ISO 8601
-- `IP_SALT` - Deve ser complexo e protegido em produção
-- `NODE_ENV` - Define se mostrar stack traces de erro
+- `VOTING_START_TIME` and `VOTING_END_TIME` - Must use ISO 8601 format.
+- `IP_SALT` - Must be complex and protected in production.
+- `NODE_ENV` - Determines whether error stack traces are shown.
 
-### Variáveis Opcionais
+### Optional variables
 
-- `RECAPTCHA_ENABLED` - Ativar validação de reCAPTCHA
-- `FIRESTORE_ENABLED` - Ativar persistência no Firestore
+- `RECAPTCHA_ENABLED` - Enable reCAPTCHA validation.
+- `FIRESTORE_ENABLED` - Enable Firestore persistence.
 
-## 🚀 Deploy
+## 🚀 Deployment
 
 ### Vercel
 
@@ -271,30 +271,30 @@ CMD ["npm", "start"]
 
 ### "Voting has not started yet"
 
-- Verificar `VOTING_START_TIME` no `.env`
-- Sincronizar relógio do servidor
+- Check `VOTING_START_TIME` in `.env`.
+- Synchronize the server clock.
 
 ### "Rate limit exceeded"
 
-- Verificar `RATE_LIMIT_MAX_REQUESTS` e `RATE_LIMIT_WINDOW_MS`
-- Diferentes IPs devem ter rate limits separados
+- Check `RATE_LIMIT_MAX_REQUESTS` and `RATE_LIMIT_WINDOW_MS`.
+- Different IPs should have separate rate limits.
 
-### CORS Error
+### CORS error
 
-- Adicionar origem do frontend em `CORS_ORIGIN`
-- Separar múltiplas origens com vírgula
+- Add the frontend origin to `CORS_ORIGIN`.
+- Separate multiple origins with commas.
 
-## 📝 Roadmap Técnico
+## 📝 Technical roadmap
 
-- [ ] Implementar reCAPTCHA v2
-- [ ] Integrar Firebase Firestore
-- [ ] Adicionar métricas e observabilidade
-- [ ] Dashboard administrativo
-- [ ] Sistema de alertas
-- [ ] Documentação OpenAPI/Swagger
-- [ ] Testes automatizados
-- [ ] CI/CD pipeline
+- [ ] Implement reCAPTCHA v2.
+- [ ] Integrate Firebase Firestore.
+- [ ] Add metrics and observability.
+- [ ] Administrative dashboard.
+- [ ] Alerting system.
+- [x] OpenAPI/Swagger documentation (available at `/api-docs`).
+- [ ] Automated tests.
+- [ ] CI/CD pipeline.
 
-## 📄 Licença
+## 📄 License
 
 ISC

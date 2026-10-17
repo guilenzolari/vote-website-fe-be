@@ -1,36 +1,44 @@
 # Security Guide - Vote API
 
-## 🔐 Implementações de Segurança Atuais
+## 🔐 Current security implementations
 
-### 1. **Bindings de Tempo (Temporal Binding)**
-O endpoint POST `/vote` valida se a votação está dentro da janela permitida:
-- Início: `VOTING_START_TIME`
-- Fim: `VOTING_END_TIME`
-- Resposta: `400` (não começou) ou `403` (encerrada)
+### 1. **Time binding (temporal binding)**
 
-### 2. **IP Hashing com Salt (LGPD Compliance)**
+The `POST /vote` endpoint validates that voting is within the allowed window:
+
+- Start: `VOTING_START_TIME`
+- End: `VOTING_END_TIME`
+- Response: `400` (voting has not started) or `403` (voting has ended)
+
+### 2. **IP hashing with salt (LGPD compliance)**
+
 ```typescript
 hash = SHA256(IP + SALT)
 ```
-- ✅ Não armazenamos IPs em texto plano
-- ✅ Impossível reverter hash para IP original
-- ✅ Salt deve ser complexo e confidencial
 
-### 3. **Rate Limiting por IP**
-- Limite: 5 requisições por 60 segundos (configurável)
-- Persistência: In-memory (não precisa de DB)
-- Headers informativos para o cliente
+- ✅ IP addresses are not stored in plain text.
+- ✅ The hash cannot be reversed to recover the original IP address.
+- ✅ The salt should be complex and confidential.
 
-### 4. **Input Validation**
-- `optionId`: string não-vazia obrigatória
-- `captchaToken`: string não-vazia obrigatória
-- Rejeita payloads malformados com `400`
+### 3. **Rate limiting by IP**
 
-### 5. **CORS Restritivo**
-- Whitelist de origens: `CORS_ORIGIN` env var
-- Credentials habilitadas apenas para origens autorizadas
+- Limit: 5 requests per 60 seconds (configurable).
+- Storage: In memory (no database required).
+- Informational headers are provided to the client.
 
-### 6. **Security Headers**
+### 4. **Input validation**
+
+- `optionId`: required, non-empty string.
+- `captchaToken`: required, non-empty string.
+- Malformed payloads are rejected with `400`.
+
+### 5. **Restrictive CORS**
+
+- Origin whitelist: `CORS_ORIGIN` environment variable.
+- Credentials are enabled only for allowed origins.
+
+### 6. **Security headers**
+
 ```
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -39,23 +47,26 @@ Content-Security-Policy: [configured]
 Referrer-Policy: strict-origin-when-cross-origin
 ```
 
-### 7. **Tratamento de Erros**
-- ✅ Produção: mensagens genéricas
-- ✅ Desenvolvimento: stack traces completos
-- ✅ Nunca vaza informação sensível
+### 7. **Error handling**
 
-### 8. **Server-Side Validation**
-- Nunca confiar em dados do cliente
-- Timestamp do servidor é a verdade absoluta
-- Validação de estado antes de qualquer ação
+- ✅ Production: generic messages.
+- ✅ Development: full stack traces.
+- ✅ Sensitive information is never exposed.
+
+### 8. **Server-side validation**
+
+- Never trust client data.
+- The server timestamp is the source of truth.
+- Validate the state before performing any action.
 
 ---
 
-## 🚨 Próximos Passos - Segurança
+## 🚨 Security next steps
 
-### Prioridade 1: reCAPTCHA v2
+### Priority 1: reCAPTCHA v2
+
 ```typescript
-// Implementar em validateCaptcha.ts
+// Implement in validateCaptcha.ts
 const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
   method: 'POST',
   body: new URLSearchParams({
@@ -69,23 +80,25 @@ if (!response.success || response.score < THRESHOLD) {
 }
 ```
 
-**Benefícios:**
-- Bloqueia bots automatizados
-- Desafio invisível para usuários humanos
-- Integração com Google
+**Benefits:**
 
-**Arquivo:** `src/middlewares/validateCaptcha.ts` (stub existente)
+- Blocks automated bots.
+- Invisible challenge for human users.
+- Google integration.
 
-### Prioridade 2: Database Persistence
-Atualmente usando in-memory store. Migrar para Firebase Firestore:
+**File:** `src/middlewares/validateCaptcha.ts` (existing stub)
+
+### Priority 2: Database persistence
+
+The current implementation uses an in-memory store. Migrate to Firebase Firestore:
 
 ```typescript
-// Novo arquivo: src/config/firebase.ts
+// New file: src/config/firebase.ts
 import admin from 'firebase-admin';
 
 const db = admin.firestore();
 
-// Em VoteDataService
+// In VoteDataService
 const voteRef = db.collection('votes');
 await voteRef.add({
   optionId,
@@ -96,34 +109,37 @@ await voteRef.add({
 });
 ```
 
-**Benefícios:**
-- Persistência real
-- Sincronização em tempo real
-- Backup automático
+**Benefits:**
 
-### Prioridade 3: VPN/Proxy Detection
+- Persistent storage.
+- Real-time synchronization.
+- Automatic backups.
+
+### Priority 3: VPN/proxy detection
+
 ```typescript
-// Novo arquivo: src/utils/geocheck.ts
+// New file: src/utils/geocheck.ts
 import axios from 'axios';
 
 export async function checkIfVPN(ip: string) {
-  // Usar API como ipqualityscore.com ou abuseipdb.com
+  // Use an API such as ipqualityscore.com or abuseipdb.com
   const response = await axios.get(`https://api.ipqualityscore.com/api/json/ip/${ip}`, {
     params: { key: IPQS_KEY }
   });
-  
+
   return response.data.is_vpn || response.data.is_proxy;
 }
 
-// Usar em rateLimit.ts
+// Use in rateLimit.ts
 if (await checkIfVPN(clientIP)) {
   throw new Error('VPN/Proxy detected');
 }
 ```
 
-### Prioridade 4: Geolocation Blocking
+### Priority 4: Geolocation blocking
+
 ```typescript
-// Bloquear votações de regiões específicas
+// Block votes from specific regions
 export const BLOCKED_COUNTRIES = ['KP', 'IR']; // ISO-3166
 
 async function checkGeolocation(ip: string) {
@@ -134,7 +150,8 @@ async function checkGeolocation(ip: string) {
 }
 ```
 
-### Prioridade 5: Logging & Monitoring
+### Priority 5: Logging and monitoring
+
 ```typescript
 // src/utils/logger.ts
 import winston from 'winston';
@@ -147,7 +164,7 @@ export const logger = winston.createLogger({
   ]
 });
 
-// Uso
+// Usage
 logger.warn('[ANOMALY] Multiple votes from same IP', {
   ipHash,
   count,
@@ -155,26 +172,29 @@ logger.warn('[ANOMALY] Multiple votes from same IP', {
 });
 ```
 
-### Prioridade 6: JWT Authentication para Admin
+### Priority 6: JWT authentication for administrators
+
 ```typescript
-// Proteger endpoints administrativos
+// Protect administrative endpoints
 const adminRoutes = Router();
 adminRoutes.use(authenticateJWT);
 adminRoutes.get('/results/detailed', AdminController.getDetailedResults);
 ```
 
-### Prioridade 7: Database Transactions
+### Priority 7: Database transactions
+
 ```typescript
-// Garantir consistência atomicidade
+// Ensure atomic consistency
 const batch = db.batch();
 batch.set(voteRef, voteData);
 batch.update(counterRef, { count: FieldValue.increment(1) });
 await batch.commit();
 ```
 
-### Prioridade 8: Data Retention Policy
+### Priority 8: Data retention policy
+
 ```typescript
-// Deletar dados após período de retenção
+// Delete data after the retention period
 export async function cleanupOldVotes(retentionDays = 90) {
   const cutoffDate = Date.now() - (retentionDays * 24 * 60 * 60 * 1000);
   await db.collection('votes')
@@ -186,31 +206,34 @@ export async function cleanupOldVotes(retentionDays = 90) {
 
 ---
 
-## 🛡️ Checklist de Segurança pré-Deploy
+## 🛡️ Pre-deployment security checklist
 
-- [ ] `IP_SALT` alterado para valor aleatório complexo
-- [ ] `CORS_ORIGIN` configurado apenas com domínios confiáveis
-- [ ] `NODE_ENV=production` em produção
-- [ ] reCAPTCHA habilitado e testado
-- [ ] Database configurado com credentials seguros
-- [ ] Logs centralizados (CloudLogging, Sentry, etc)
-- [ ] HTTPS/TLS habilitado
-- [ ] Rate limiting testado com ferramentas como `ab` ou `vegeta`
-- [ ] Teste de penetração básico realizado
-- [ ] Backup automático configurado
+- [ ] Change `IP_SALT` to a complex random value.
+- [ ] Configure `CORS_ORIGIN` with trusted domains only.
+- [ ] Set `NODE_ENV=production` in production.
+- [ ] Enable and test reCAPTCHA.
+- [ ] Configure the database with secure credentials.
+- [ ] Centralize logs (Cloud Logging, Sentry, etc.).
+- [ ] Enable HTTPS/TLS.
+- [ ] Test rate limiting with tools such as `ab` or `vegeta`.
+- [ ] Perform a basic penetration test.
+- [ ] Configure automatic backups.
 
 ---
 
-## 📊 Monitoramento de Segurança
+## 📊 Security monitoring
 
-### Alertas Automáticos
-Configurar alertas para:
-- Taxa de erro > 5% por minuto
-- Rate limit triggered > 100x por minuto
-- Mesma opção votada > 1000x em 5 minutos
-- Votação de múltiplas regiões geográficas em < 1s
+### Automated alerts
 
-### Logs Críticos
+Configure alerts for:
+
+- Error rate > 5% per minute.
+- Rate limit triggered > 100 times per minute.
+- Same option voted for > 1,000 times in 5 minutes.
+- Votes from multiple geographic regions in < 1 second.
+
+### Critical logs
+
 ```
 [SECURITY] Invalid captcha attempt - IP: {hash}
 [SECURITY] Rate limit exceeded - IP: {hash}, Requests: {count}/{limit}
@@ -220,22 +243,26 @@ Configurar alertas para:
 
 ---
 
-## 🔄 Rotação de Segurança
+## 🔄 Security rotation
 
-### Diária
-- Revisar logs de erro
-- Checar alertas
+### Daily
 
-### Semanal
-- Revisar IP hashes suspeitos
-- Analisar padrões de votação
+- Review error logs.
+- Check alerts.
 
-### Mensal
-- Rotacionar `IP_SALT`
-- Atualizar dependências
-- Testar disaster recovery
+### Weekly
 
-### Trimestral
-- Teste de penetração
-- Auditoria de segurança
-- Atualizar políticas
+- Review suspicious IP hashes.
+- Analyze voting patterns.
+
+### Monthly
+
+- Rotate `IP_SALT`.
+- Update dependencies.
+- Test disaster recovery.
+
+### Quarterly
+
+- Perform a penetration test.
+- Conduct a security audit.
+- Update policies.
