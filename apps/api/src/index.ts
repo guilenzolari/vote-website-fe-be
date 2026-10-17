@@ -2,7 +2,9 @@ import "dotenv/config";
 
 import express from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import voteRoutes from "./routes/voteRoutes";
+import openApiSpec from "./docs/openApiSpec";
 import { securityHeaders } from "./middlewares/securityHeaders";
 import { errorHandler } from "./middlewares/errorHandler";
 import { log } from "./utils/logger";
@@ -31,6 +33,9 @@ app.use(
 // Security headers
 // Aplica p middleware de segurança dos headers em todas as respostas inclusive erros
 app.use(securityHeaders);
+
+// API documentation
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
 
 // Health check
 app.get("/health", (req, res) => {

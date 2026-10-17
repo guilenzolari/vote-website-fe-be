@@ -20,7 +20,16 @@ export function securityHeaders(
   // CSP header
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; frame-src https://www.google.com/recaptcha/"
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/",
+      "frame-src https://www.google.com/recaptcha/",
+      req.path.startsWith("/api-docs")
+        ? "style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+        : "",
+    ]
+      .filter(Boolean)
+      .join("; "),
   );
 
   next();
